@@ -1,4 +1,4 @@
-package com.example.hackathon;
+package com.example.hackathon.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +12,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Request {
-    private String lat;
-    private String lon;
+public class PlaceRequest {
+    private double lat;
+    private double lon;
+    private int size = 10;
     private int radius;
     HashMap<String, List<String>> tags;
 }

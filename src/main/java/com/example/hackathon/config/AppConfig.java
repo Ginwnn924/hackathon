@@ -1,4 +1,4 @@
-package com.example.hackathon;
+package com.example.hackathon.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
