@@ -1,7 +1,6 @@
-package com.example.hackathon;
+package com.example.hackathon.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.Map;
@@ -11,7 +10,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Place {
+public class PlaceResponse {
     private String type;
     private long id;
     private double lat;

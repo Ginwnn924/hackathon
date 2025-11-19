@@ -1,13 +1,14 @@
 package com.example.hackathon.service;
 
-import com.example.hackathon.Place;
+import com.example.hackathon.dto.PlaceResponse;
 import com.example.hackathon.dto.PlaceRequest;
 import com.example.hackathon.mapper.PlaceMapper;
 import com.geodesk.feature.Feature;
 import com.geodesk.feature.FeatureLibrary;
+import com.geodesk.feature.Node;
+import com.geodesk.feature.Way;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +23,10 @@ public class PlaceService {
     private final FeatureLibrary vietnamLibrary;
     private final PlaceMapper placeMapper;
 
-    public List<Place> filterPlacesWithNameTag(PlaceRequest placeRequest) {
+    public List<PlaceResponse> filterPlacesWithNameTag(PlaceRequest placeRequest) {
         Feature f1 = vietnamLibrary.select("na")  // n = node, a = area, w = way
                 .containingLonLat(placeRequest.getLon(), placeRequest.getLat()).first();
+
         log.info("ID: {}, name: {}, Z: {}, Type: {}, Lat: {}, Lon: {}, Tags: {}",
                 f1.id(),
                 f1.stringValue("name"),
@@ -43,10 +45,28 @@ public class PlaceService {
                             .maxMetersFromLonLat(placeRequest.getRadius(), placeRequest.getLon(), placeRequest.getLat())
                             .toList().stream().limit(placeRequest.getSize()).toList()
             );
+//            test(results);
         }
         return placeMapper.mapFeatureToPlace(results, f1);
     }
 
+//
+//    public void test(List<Feature> results ) {
+//        for (Feature f : results) {
+//            if (f instanceof Way) {
+//                log.info("ID: {}, name: {}, Z: {}, Type: {}, Lat: {}, Lon: {}, Tags: {}",
+//                        f.id(),
+//                        f.stringValue("name"),
+//                        f.length(),
+//                        f.type(),
+//                        f.nodes().first().lat(),
+//                        f.nodes().first().lon(),
+//                        f.tags().toString()
+//                );
+//            }
+//        }
+//
+//    }
 
     // tao 1 ham builder tag to query
     public List<String> buildTagQueries(HashMap<String, List<String>> tags, String type) {

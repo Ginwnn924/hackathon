@@ -1,3 +1,5 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
-vietnam.gol
+vietnam.gol filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.gol filter=lfs diff=lfs merge=lfs -text

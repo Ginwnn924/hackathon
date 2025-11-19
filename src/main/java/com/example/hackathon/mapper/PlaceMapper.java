@@ -1,7 +1,9 @@
 package com.example.hackathon.mapper;
 
-import com.example.hackathon.Place;
+import com.example.hackathon.dto.PlaceResponse;
 import com.geodesk.feature.Feature;
+import com.geodesk.feature.Relation;
+import com.geodesk.feature.Way;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +16,39 @@ import java.util.Map;
 @Service
 public class PlaceMapper {
 
-    public List<Place> mapFeatureToPlace(List<Feature> list, Feature f1) {
+    public List<PlaceResponse> mapFeatureToPlace(List<Feature> list, Feature f1) {
         Geometry first = f1.toGeometry();
-        List<Place> places = new ArrayList<>();
+        List<PlaceResponse> placeResponses = new ArrayList<>();
         for (Feature f : list) {
-            Place place = new Place();
-            place.setId(f.id());
-            place.setType(f.type().toString());
-            place.setLat(f.lat());
-            place.setDistance(f.toGeometry().distance(first));
-            place.setLon(f.lon());
-            place.setTags(parseTags(f.tags().toString()));
-            places.add(place);
+            PlaceResponse placeResponse = new PlaceResponse();
+            placeResponse.setId(f.id());
+            placeResponse.setType(f.type().toString());
+            placeResponse.setDistance(f.toGeometry().distance(first));
+            placeResponse.setLon(f.lon());
+            placeResponse.setLat(f.lat());
+            placeResponse.setTags(parseTags(f.tags().toString()));
+            placeResponses.add(placeResponse);
+            if (f instanceof Way) {
+                placeResponse.setLat(f.nodes().first().lat());
+                placeResponse.setLon(f.nodes().first().lon());
+            }
+            else if (f instanceof Relation) {
+                Relation relation = (Relation) f;
+                for (Feature member : relation.members()) {
+                    if (member instanceof Way) {
+                        Way way = (Way) member;
+                        placeResponse.setLat(way.nodes().first().lat());
+                        placeResponse.setLon(way.nodes().first().lon());
+                        break;
+                    }
+                }
+            }
+            else {
+                placeResponse.setLon(f.lon());
+                placeResponse.setLat(f.lat());
+            }
         }
-        return places;
+        return placeResponses;
     }
 
 
