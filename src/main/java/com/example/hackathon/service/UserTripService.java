@@ -18,6 +18,12 @@ public class UserTripService {
     private UserTripRepository userTripRepository;
 
     @Autowired
+    private UserTripRouteService routeService;
+
+    @Autowired
+    private UserTripWaypointService waypointService;
+
+    @Autowired
     private UserTripMapper mapper;
 
     public List<UserTrip> getAllTrips() {
@@ -40,6 +46,20 @@ public class UserTripService {
         UserEntity user = new UserEntity();
         user.setId(trip.getUserId());
         entity.setUser(user);
+
+        var routes = routeService.getAllRoutesByIds(trip.getRoutes());
+        var waypoints = waypointService.getAllWaypointsByIds(trip.getWaypoints());
+        
+        for(var route : routes) {
+            route.setUserTrip(entity);
+        }
+        
+        for(var waypoint : waypoints) {
+            waypoint.setUserTrip(entity);
+        }
+
+        entity.setRoutes(routes);
+        entity.setWaypoints(waypoints);
 
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());

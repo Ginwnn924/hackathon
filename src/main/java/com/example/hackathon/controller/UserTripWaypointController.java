@@ -49,24 +49,4 @@ public class UserTripWaypointController {
 
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping
-    public ResponseEntity<UserTripWaypointResponse> createWaypoint(@RequestBody UserTripWaypointRequest request) {
-        var created = service.createWaypoint(request);
-        var response = mapper.toDTO(created);
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserTripWaypointResponse> updateWaypoint(@PathVariable Long id, @RequestBody UserTripWaypointRequest request) {
-        var updated = service.updateWaypoint(id, request);
-        var response = mapper.toDTO(updated);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWaypoint(@PathVariable Long id) {
-        service.deleteWaypoint(id);
-        return ResponseEntity.noContent().build();
-    }
 }

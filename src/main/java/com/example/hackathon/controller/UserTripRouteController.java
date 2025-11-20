@@ -56,24 +56,4 @@ public class UserTripRouteController {
 
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping
-    public ResponseEntity<UserTripRouteResponse> createRoute(@RequestBody UserTripRouteRequest request) {
-        var created = service.createRoute(request);
-        var response = mapper.toDTO(created);
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserTripRouteResponse> updateRoute(@PathVariable Long id, @RequestBody UserTripRouteRequest request) {
-        var updated = service.updateRoute(id, request);
-        var response = mapper.toDTO(updated);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRoute(@PathVariable Long id) {
-        service.deleteRoute(id);
-        return ResponseEntity.noContent().build();
-    }
 }

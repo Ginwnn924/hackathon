@@ -1,5 +1,7 @@
 package com.example.hackathon.dto;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,4 +12,6 @@ public class UserTripRequest {
     private Double totalDistance;
     private Double totalDuration;
     private Long userId;
+    private List<Long> routes;
+    private List<Long> waypoints;
 }

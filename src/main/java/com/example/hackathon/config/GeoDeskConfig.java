@@ -1,35 +1,39 @@
 package com.example.hackathon.config;
 
 import com.geodesk.feature.FeatureLibrary;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 @Configuration
+@Slf4j
 public class GeoDeskConfig {
-
+    
     @Bean
-    public FeatureLibrary vietnamLibrary() throws Exception {
-        String filePath = "/app/vietnam.gol";
-        File golFile = new File(filePath);
-
-        if (!golFile.exists()) {
-            throw new IOException("File không tồn tại: " + filePath);
+    public FeatureLibrary vietnamLibrary() {
+        // Các vị trí có thể tìm file
+        String[] possiblePaths = {
+            "/app/vietnam.gol",           // Docker path
+            "vietnam.gol",                // Local path (current directory)
+            System.getProperty("user.dir") + "/vietnam.gol"
+        };
+        
+        for (String path : possiblePaths) {
+            File file = new File(path);
+            if (file.exists() && file.isFile()) {
+                log.info("✓ Found vietnam.gol at: {}", path);
+                log.info("✓ File size: {} MB", file.length() / (1024 * 1024));
+                return new FeatureLibrary(path);
+            }
         }
-
-        long fileSize = golFile.length();
-        System.out.println("DEBUG: Loading vietnam.gol from: " + filePath + " (" + fileSize + " bytes)");
-
-        if (fileSize == 0) {
-            throw new IOException("File rỗng: " + filePath);
+        
+        // Nếu không tìm thấy, báo lỗi chi tiết
+        log.error("✗ vietnam.gol not found!");
+        log.error("Checked paths:");
+        for (String path : possiblePaths) {
+            log.error("  - {}", path);
         }
-
-        return new FeatureLibrary(filePath);
+        throw new RuntimeException("vietnam.gol not found. Please ensure the file exists in project root or /app directory");
     }
 }

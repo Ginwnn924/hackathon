@@ -9,5 +9,4 @@ public class UserTripRouteRequest {
     private String geometry;
     private Double distance;
     private Double duration;
-    private Long tripId;
 }

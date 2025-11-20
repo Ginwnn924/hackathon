@@ -15,5 +15,4 @@ public class UserTripWaypointRequest {
     private LocalDateTime arriveAt;
     private LocalDateTime leaveAt;
     private String note;
-    private Long tripId;
 }
