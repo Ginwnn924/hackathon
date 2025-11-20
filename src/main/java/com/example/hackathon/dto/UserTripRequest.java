@@ -12,6 +12,6 @@ public class UserTripRequest {
     private Double totalDistance;
     private Double totalDuration;
     private Long userId;
-    private List<Long> routes;
-    private List<Long> waypoints;
+    private List<Long> routeIds;
+    private List<Long> waypointIds;
 }
