@@ -7,9 +7,13 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-RUN curl -L 'https://drive.google.com/uc?export=download&id=1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4' -o src/main/resources/vietnam.gol
+# === ĐÃ SỬA: TẠO THƯ MỤC VÀ TẢI FILE LỚN ===
+# Gom lệnh tạo thư mục và tải file vào một RUN duy nhất.
+RUN mkdir -p src/main/resources && \
+    curl -L 'https://drive.google.com/uc?export=download&id=1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4' -o src/main/resources/vietnam.gol
+# ============================================
 
-# Copy source code
+# Copy source code (Sau khi đã tải file)
 COPY src ./src
 
 # Build application
@@ -28,7 +32,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
 # Run application
 ENTRYPOINT ["java", "-jar", "app.jar"]
