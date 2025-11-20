@@ -18,15 +18,22 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Cài curl để download file
-RUN apk add --no-cache curl
+# Cài Python và gdown
+RUN apk add --no-cache python3 py3-pip wget && \
+    pip3 install --no-cache-dir gdown --break-system-packages
 
 # Copy JAR từ stage build
 COPY --from=builder /app/target/hackathon-0.0.1-SNAPSHOT.jar app.jar
 
-# Download file vietnam.gol vào runtime image
-RUN curl -fL 'https://drive.google.com/uc?export=download&id=1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4' -o /app/vietnam.gol && \
-    echo "File size: $(stat -c%s /app/vietnam.gol) bytes"
+# Download file bằng gdown (support file lớn)
+RUN gdown 1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4 -O /app/vietnam.gol && \
+    ls -lh /app/vietnam.gol && \
+    FILE_SIZE=$(stat -c%s /app/vietnam.gol) && \
+    echo "Downloaded: $FILE_SIZE bytes" && \
+    if [ "$FILE_SIZE" -lt 300000000 ]; then \
+        echo "ERROR: Download failed!"; \
+        exit 1; \
+    fi
 
 EXPOSE 8080
 
