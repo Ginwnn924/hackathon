@@ -7,25 +7,27 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# Copy source code (KHÔNG CẦN download file ở đây nữa)
+# Copy source code
 COPY src ./src
 
 # Build application
 RUN mvn clean package -DskipTests
 
-# Stage 2: Runtime
-FROM eclipse-temurin:17-jre-alpine
+# Stage 2: Runtime - ĐỔI SANG DEBIAN BASE
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
 # Cài Python và gdown
-RUN apk add --no-cache python3 py3-pip wget && \
-    pip3 install --no-cache-dir gdown --break-system-packages
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip wget && \
+    pip3 install --no-cache-dir gdown && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy JAR từ stage build
 COPY --from=builder /app/target/hackathon-0.0.1-SNAPSHOT.jar app.jar
 
-# Download file bằng gdown (support file lớn)
+# Download file bằng gdown
 RUN gdown 1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4 -O /app/vietnam.gol && \
     ls -lh /app/vietnam.gol && \
     FILE_SIZE=$(stat -c%s /app/vietnam.gol) && \
@@ -33,7 +35,8 @@ RUN gdown 1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4 -O /app/vietnam.gol && \
     if [ "$FILE_SIZE" -lt 300000000 ]; then \
         echo "ERROR: Download failed!"; \
         exit 1; \
-    fi
+    fi && \
+    chmod 644 /app/vietnam.gol
 
 EXPOSE 8080
 
