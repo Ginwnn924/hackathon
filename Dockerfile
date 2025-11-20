@@ -13,15 +13,15 @@ COPY src ./src
 # Build application
 RUN mvn clean package -DskipTests
 
-# Stage 2: Runtime - ĐỔI SANG DEBIAN BASE
+# Stage 2: Runtime
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-# Cài Python và gdown
+# Cài Python và gdown với --break-system-packages
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip wget && \
-    pip3 install --no-cache-dir gdown && \
+    apt-get install -y python3-full python3-pip wget && \
+    pip3 install --break-system-packages --no-cache-dir gdown && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy JAR từ stage build
