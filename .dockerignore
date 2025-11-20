@@ -1,0 +1,13 @@
+target/
+.git
+.gitignore
+.maven
+.env
+.env.properties
+env.properties
+*.md
+.DS_Store
+node_modules/
+.vscode/
+.idea/
+*.iml
