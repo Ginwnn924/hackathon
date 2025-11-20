@@ -7,6 +7,8 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
+RUN curl -L 'https://drive.google.com/uc?export=download&id=1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4' -o src/main/resources/vietnam.gol
+
 # Copy source code
 COPY src ./src
 
