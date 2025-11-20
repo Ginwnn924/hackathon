@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.hackathon.dto.TravelRequest;
 import com.example.hackathon.dto.UserTripRequest;
 import com.example.hackathon.dto.UserTripResponse;
 import com.example.hackathon.mapper.UserTripMapper;
@@ -43,7 +44,7 @@ public class UserTripController {
     }
 
     @PostMapping
-    public ResponseEntity<UserTripResponse> createTrip(@RequestBody UserTripRequest request) {
+    public ResponseEntity<UserTripResponse> createTrip(@RequestBody TravelRequest request) {
         var created = service.createTrip(request);
         var response = mapper.toDTO(created);
         return ResponseEntity.ok(response);
