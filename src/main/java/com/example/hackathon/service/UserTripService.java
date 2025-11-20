@@ -1,9 +1,16 @@
 package com.example.hackathon.service;
 
+import com.example.hackathon.dto.TravelRequest;
 import com.example.hackathon.dto.UserTripRequest;
+import com.example.hackathon.dto.UserTripRouteRequest;
+import com.example.hackathon.dto.UserTripWaypointRequest;
 import com.example.hackathon.entity.UserEntity;
 import com.example.hackathon.entity.UserTrip;
+import com.example.hackathon.entity.UserTripRoute;
+import com.example.hackathon.entity.UserTripWaypoint;
 import com.example.hackathon.mapper.UserTripMapper;
+import com.example.hackathon.mapper.UserTripRouteMapper;
+import com.example.hackathon.mapper.UserTripWaypointMapper;
 import com.example.hackathon.repository.UserTripRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +33,12 @@ public class UserTripService {
     @Autowired
     private UserTripMapper mapper;
 
+    @Autowired
+    private UserTripRouteMapper routeMapper;
+
+    @Autowired
+    private UserTripWaypointMapper waypointMapper;
+
     public List<UserTrip> getAllTrips() {
         return userTripRepository.findAll();
     }
@@ -38,25 +51,38 @@ public class UserTripService {
         return userTripRepository.findByUserId(userId);
     }
 
-    public UserTrip createTrip(UserTripRequest trip) {
+    public UserTrip createTrip(TravelRequest travel) {
+        UserTripRequest tripReq = travel.getTrip();
         UserTrip entity = new UserTrip();
-        mapper.update(trip, entity);
+        mapper.update(tripReq, entity);
+
+        List<UserTripRoute> routes = travel.getRoutes().stream()
+                .map(routeReq -> {
+                    UserTripRoute route = new UserTripRoute();
+                    routeMapper.update(routeReq, route);
+                    route.setCreatedAt(LocalDateTime.now());
+
+                    route.setUserTrip(entity);
+                    return route;
+                })
+                .toList();
+
+        List<UserTripWaypoint> waypoints = travel.getWaypoints().stream()
+                .map(waypointReq -> {
+                    UserTripWaypoint waypoint = new UserTripWaypoint();
+                    waypointMapper.update(waypointReq, waypoint);
+                    waypoint.setCreatedAt(LocalDateTime.now());
+                    waypoint.setUpdatedAt(LocalDateTime.now());
+
+                    waypoint.setUserTrip(entity);
+                    return waypoint;
+                })
+                .toList();
 
         // TODO: User missing CRUD so can't check
         UserEntity user = new UserEntity();
-        user.setId(trip.getUserId());
+        user.setId(tripReq.getUserId());
         entity.setUser(user);
-
-        var routes = routeService.getAllRoutesByIds(trip.getRoutes());
-        var waypoints = waypointService.getAllWaypointsByIds(trip.getWaypoints());
-        
-        for(var route : routes) {
-            route.setUserTrip(entity);
-        }
-        
-        for(var waypoint : waypoints) {
-            waypoint.setUserTrip(entity);
-        }
 
         entity.setRoutes(routes);
         entity.setWaypoints(waypoints);

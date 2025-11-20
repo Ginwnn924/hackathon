@@ -3,16 +3,11 @@ package com.example.hackathon.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.hackathon.dto.UserTripWaypointRequest;
 import com.example.hackathon.dto.UserTripWaypointResponse;
 import com.example.hackathon.mapper.UserTripWaypointMapper;
 import com.example.hackathon.service.UserTripWaypointService;
