@@ -14,31 +14,42 @@ import java.nio.file.StandardCopyOption;
 @Configuration
 public class GeoDeskConfig {
 
-    /**
-     * Khởi tạo FeatureLibrary cho vietnam.gol.
-     * Phương thức này giải nén file vietnam.gol từ bên trong JAR ra một file tạm thời
-     * trên hệ thống để thư viện GeoDesk có thể truy cập được.
-     */
     @Bean
     public FeatureLibrary vietnamLibrary() throws Exception {
-
         String resourceName = "vietnam.gol";
+        File tempFile = null;
         
-        File tempFile = File.createTempFile("vietnam-gol-", ".tmp");
-        tempFile.deleteOnExit(); 
-        try (InputStream inputStream = new ClassPathResource(resourceName).getInputStream()) {
-            
-            if (inputStream == null) {
-                throw new IOException("Không tìm thấy file " + resourceName + " trong JAR. Kiểm tra lại tên file và Dockerfile.");
-            }
-            
-            Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            
-            System.out.println("DEBUG: File 384MB đã được giải nén thành công vào: " + tempFile.getAbsolutePath());
-        } catch (IOException e) {
-             throw new IOException("Lỗi IO khi giải nén file " + resourceName + ": " + e.getMessage(), e);
-        }
+        try {
+            // Tạo file tạm thời và đảm bảo nó được dọn dẹp
+            tempFile = File.createTempFile("vietnam-gol-", ".tmp");
+            tempFile.deleteOnExit(); 
 
-        return new FeatureLibrary(tempFile.getAbsolutePath());
+            // Lấy InputStream từ JAR
+            ClassPathResource resource = new ClassPathResource(resourceName);
+            if (!resource.exists()) {
+                 // Nếu không tìm thấy trong JAR (sau khi tải trong Dockerfile)
+                 throw new IOException("Resource not found: " + resourceName + " in JAR.");
+            }
+
+            try (InputStream inputStream = resource.getInputStream()) {
+                
+                // Sao chép nội dung 384MB từ JAR sang file vật lý tạm thời
+                long bytesCopied = Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                
+                // KIỂM TRA ĐỘ TOÀN VẸN: Nếu file tạm thời rỗng, có thể quá trình copy lỗi
+                if (bytesCopied == 0) {
+                     throw new IOException("File copy failed, 0 bytes copied from resource: " + resourceName);
+                }
+                
+                System.out.println("DEBUG: File " + resourceName + " extracted to: " + tempFile.getAbsolutePath() + " (" + bytesCopied + " bytes)");
+            }
+
+            // Mở FeatureLibrary bằng đường dẫn file vật lý vừa được giải nén
+            return new FeatureLibrary(tempFile.getAbsolutePath());
+            
+        } catch (Exception e) {
+            // Ném lại lỗi với thông tin chi tiết hơn
+            throw new Exception("Lỗi khi tạo FeatureLibrary từ vietnam.gol: " + e.getMessage() + ". Đường dẫn tạm thời: " + (tempFile != null ? tempFile.getAbsolutePath() : "N/A"), e);
+        }
     }
 }

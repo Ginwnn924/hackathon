@@ -10,7 +10,7 @@ RUN mvn dependency:go-offline
 # === ĐÃ SỬA: TẠO THƯ MỤC VÀ TẢI FILE LỚN ===
 # Gom lệnh tạo thư mục và tải file vào một RUN duy nhất.
 RUN mkdir -p src/main/resources && \
-    curl -L 'https://drive.google.com/uc?export=download&id=1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4' -o src/main/resources/vietnam.gol
+    curl -fL 'https://drive.google.com/uc?export=download&id=1LWil3JUQcc2HCXd0Qw2Db5oH2Fnd3GR4' -o src/main/resources/vietnam.gol
 # ============================================
 
 # Copy source code (Sau khi đã tải file)
