@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "users")
 @Entity
@@ -21,4 +22,6 @@ public class UserEntity {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTrip> trips;
 }
