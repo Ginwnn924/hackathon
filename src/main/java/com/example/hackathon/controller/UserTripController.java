@@ -2,9 +2,12 @@ package com.example.hackathon.controller;
 
 import java.util.List;
 
+import com.example.hackathon.entity.UserEntity;
+import com.example.hackathon.security.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +51,20 @@ public class UserTripController {
         var created = service.createTrip(request);
         var response = mapper.toDTO(created);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/invite")
+    public ResponseEntity<UserTripResponse> inviteUserToTrip(@PathVariable Long id) {
+        UserTripResponse result = service.inviteTrip(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/{code}/join")
+    public ResponseEntity<UserTripResponse> joinTripByCode(@PathVariable String code, Authentication authentication) {
+        UserEntity user = ((CustomUserDetail) authentication.getPrincipal()).getUserEntity();
+
+        UserTripResponse result = service.joinTripByCode(code, user);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{id}")

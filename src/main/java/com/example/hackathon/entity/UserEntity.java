@@ -22,6 +22,7 @@ public class UserEntity {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserTrip> trips;
+    private List<ShareEntity> sharedTrips;
 }
