@@ -2,6 +2,7 @@ package com.example.hackathon.service;
 
 import com.example.hackathon.dto.TravelRequest;
 import com.example.hackathon.dto.UserTripRequest;
+import com.example.hackathon.dto.UserTripResponse;
 import com.example.hackathon.entity.UserEntity;
 import com.example.hackathon.entity.UserTrip;
 import com.example.hackathon.entity.UserTripWaypoint;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,7 +29,6 @@ public class UserTripService {
     @Autowired
     private UserTripMapper mapper;
 
-
     @Autowired
     private UserTripWaypointMapper waypointMapper;
 
@@ -39,8 +40,14 @@ public class UserTripService {
         return userTripRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public List<UserTrip> getTripsByUserId(Long userId) {
-        return userTripRepository.findByUserId(userId);
+    public List<UserTripResponse> getTripsByUserId(Long userId) {
+        List<UserTripResponse> userTrips = new ArrayList<>();
+        List<UserTrip> trips = userTripRepository.findByUserId(userId);
+        for (UserTrip trip : trips) {
+            UserTripResponse tripResponse = mapper.toDTO(trip);
+            userTrips.add(tripResponse);
+        }
+        return userTrips;
     }
 
     public UserTrip createTrip(TravelRequest travel) {
