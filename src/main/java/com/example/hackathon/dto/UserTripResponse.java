@@ -15,6 +15,5 @@ public class UserTripResponse {
     private Double totalDuration;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<UserTripRouteResponse> routes;
     private List<UserTripWaypointResponse> waypoints;
 }

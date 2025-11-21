@@ -12,7 +12,4 @@ public class UserTripWaypointRequest {
     private String name;
     private Double lat;
     private Double lon;
-    private LocalDateTime arriveAt;
-    private LocalDateTime leaveAt;
-    private String note;
 }

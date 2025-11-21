@@ -4,15 +4,16 @@ import com.example.hackathon.entity.UserTripWaypoint;
 import com.example.hackathon.mapper.UserTripWaypointMapper;
 import com.example.hackathon.repository.UserTripWaypointRepository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserTripWaypointService {
 
-    @Autowired
     private UserTripWaypointRepository waypointRepository;
 
     public List<UserTripWaypoint> getAllWaypoints() {

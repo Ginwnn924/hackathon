@@ -2,6 +2,7 @@ package com.example.hackathon.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,13 +20,12 @@ import com.example.hackathon.dto.UserTripResponse;
 import com.example.hackathon.mapper.UserTripMapper;
 import com.example.hackathon.service.UserTripService;
 
+@RequiredArgsConstructor
 @RequestMapping("/api/trips")
 @RestController
 public class UserTripController {
-    @Autowired
-    private UserTripService service;
-    @Autowired
-    private UserTripMapper mapper;
+    private final UserTripService service;
+    private final UserTripMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<UserTripResponse>> getUserProfile() {

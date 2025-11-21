@@ -28,15 +28,6 @@ public class UserTripWaypoint {
     @Column(name = "lon", nullable = false)
     private Double lon;
 
-    @Column(name = "arrive_at")
-    private LocalDateTime arriveAt;
-
-    @Column(name = "leave_at")
-    private LocalDateTime leaveAt;
-
-    @Column(name = "note", columnDefinition = "text")
-    private String note;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

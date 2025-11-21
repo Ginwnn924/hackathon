@@ -8,8 +8,7 @@ import com.example.hackathon.dto.UserTripRequest;
 import com.example.hackathon.dto.UserTripResponse;
 import com.example.hackathon.entity.UserTrip;
 
-@Mapper(componentModel = "spring", uses = { UserTripRouteMapper.class,
-        UserTripWaypointMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = { UserTripWaypointMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserTripMapper {
 
     UserTripResponse toDTO(UserTrip entity);

@@ -9,6 +9,5 @@ import lombok.Setter;
 @Setter
 public class TravelRequest {
     private UserTripRequest trip;
-    private List<UserTripRouteRequest> routes;
-    private List<UserTripWaypointRequest> waypoints;   
+    private List<UserTripWaypointRequest> waypoints;
 }

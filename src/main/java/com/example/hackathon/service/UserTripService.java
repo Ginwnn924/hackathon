@@ -2,14 +2,10 @@ package com.example.hackathon.service;
 
 import com.example.hackathon.dto.TravelRequest;
 import com.example.hackathon.dto.UserTripRequest;
-import com.example.hackathon.dto.UserTripRouteRequest;
-import com.example.hackathon.dto.UserTripWaypointRequest;
 import com.example.hackathon.entity.UserEntity;
 import com.example.hackathon.entity.UserTrip;
-import com.example.hackathon.entity.UserTripRoute;
 import com.example.hackathon.entity.UserTripWaypoint;
 import com.example.hackathon.mapper.UserTripMapper;
-import com.example.hackathon.mapper.UserTripRouteMapper;
 import com.example.hackathon.mapper.UserTripWaypointMapper;
 import com.example.hackathon.repository.UserTripRepository;
 
@@ -24,8 +20,6 @@ public class UserTripService {
     @Autowired
     private UserTripRepository userTripRepository;
 
-    @Autowired
-    private UserTripRouteService routeService;
 
     @Autowired
     private UserTripWaypointService waypointService;
@@ -33,8 +27,6 @@ public class UserTripService {
     @Autowired
     private UserTripMapper mapper;
 
-    @Autowired
-    private UserTripRouteMapper routeMapper;
 
     @Autowired
     private UserTripWaypointMapper waypointMapper;
@@ -56,16 +48,6 @@ public class UserTripService {
         UserTrip entity = new UserTrip();
         mapper.update(tripReq, entity);
 
-        List<UserTripRoute> routes = travel.getRoutes().stream()
-                .map(routeReq -> {
-                    UserTripRoute route = new UserTripRoute();
-                    routeMapper.update(routeReq, route);
-                    route.setCreatedAt(LocalDateTime.now());
-
-                    route.setUserTrip(entity);
-                    return route;
-                })
-                .toList();
 
         List<UserTripWaypoint> waypoints = travel.getWaypoints().stream()
                 .map(waypointReq -> {
@@ -84,7 +66,6 @@ public class UserTripService {
         user.setId(tripReq.getUserId());
         entity.setUser(user);
 
-        entity.setRoutes(routes);
         entity.setWaypoints(waypoints);
 
         entity.setCreatedAt(LocalDateTime.now());

@@ -37,8 +37,6 @@ public class UserTrip {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "userTrip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserTripRoute> routes;
 
     @OneToMany(mappedBy = "userTrip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserTripWaypoint> waypoints;
