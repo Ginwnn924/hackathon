@@ -29,6 +29,8 @@ public class SocketListener {
         return (client) -> {
             String room = client.getHandshakeData().getSingleUrlParam("room");
             Long userId = Long.parseLong(client.getHandshakeData().getSingleUrlParam("userId"));
+            String lat = client.getHandshakeData().getSingleUrlParam("lat");
+            String lng = client.getHandshakeData().getSingleUrlParam("lng");
             if (room != null && !room.trim().isEmpty()) {
                 log.info("Room ID: {}", room);
                 client.joinRoom(room);
@@ -45,6 +47,8 @@ public class SocketListener {
             messageSocket.setName(user.getName());
             messageSocket.setCode(room);
             messageSocket.setImg(user.getImg());
+            messageSocket.setLat(Double.parseDouble(lat));
+            messageSocket.setLng(Double.parseDouble(lng));
             server.getRoomOperations(room).sendEvent("notification", messageSocket);
 
         };
